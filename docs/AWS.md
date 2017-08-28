@@ -1,7 +1,7 @@
 # Creating the Spinnaker VPC in AWS
 
 ## Several things to Note:
-* Bakes only work in us-east-1 and us-west-2 (pending rosco update to handle bakes in other regions).
+* Bakes work in us-east-1, us-west-1, and us-west-2.
 * If Spinnaker has already been installed somewhere in the account make sure the IAM roles in terraform.tfvars will not conflict with ones that may have already been created.
 
 The environment contains a Bastion host, a Spinnaker Host, and a Jenkins host.
@@ -22,7 +22,7 @@ Other things the terraform does:
 ## To use:
 * Install Pre-Requisites. The scripts will happily complain if the pre-reqs aren't there, but who wants to hear complaining?
   * git
-  * Terraform >= 0.6.9 
+  * Terraform >= 0.8.2
     * Download from https://terraform.io/downloads.html and put it in your $PATH
   * Python Modules:
     * boto >= 2.38.0

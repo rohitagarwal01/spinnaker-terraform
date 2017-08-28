@@ -1,6 +1,6 @@
 
-resource "template_file" "output" {
-	template = "output.tpl"
+data "template_file" "output" {
+	template = "${file("${path.module}/output.tpl")}"
 
 	vars {
 		jenkins_public_ip = "${aws_instance.jenkins.public_ip}"
@@ -22,5 +22,5 @@ resource "template_file" "output" {
 }
 
 output "" {
-	value = "${template_file.output.rendered}"
+	value = "${data.template_file.output.rendered}"
 }

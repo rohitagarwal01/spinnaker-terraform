@@ -1,7 +1,7 @@
 
 /* bastion instance */
 resource "aws_instance" "bastion" {
-  ami = "${lookup(var.aws_ubuntu_amis, format(\"%s-%s-%s-%s-%s\", var.region, var.ubuntu_distribution, var.ubuntu_architecture, var.ubuntu_virttype, var.ubuntu_storagetype))}"
+  ami = "${lookup(var.aws_ubuntu_amis, format("%s-%s-%s-%s-%s", var.region, var.ubuntu_distribution, var.ubuntu_architecture, var.ubuntu_virttype, var.ubuntu_storagetype))}"
   instance_type = "${var.bastion_instance_type}"
   subnet_id = "${aws_subnet.admin_public_subnet.0.id}"
   vpc_security_group_ids = ["${aws_security_group.adm_bastion.id}", "${aws_security_group.vpc_sg.id}", "${aws_security_group.mgmt_sg.id}"]
@@ -14,7 +14,7 @@ resource "aws_instance" "bastion" {
 
   connection {
     user = "${var.ssh_user}"
-    key_file = "${var.ssh_private_key_location}"
+    private_key = "${file(var.ssh_private_key_location)}"
     agent = false
   }
 
@@ -45,7 +45,7 @@ resource "aws_instance" "bastion" {
 
 /* jenkins instance */
 resource "aws_instance" "jenkins" {
-  ami = "${lookup(var.aws_ubuntu_amis, format(\"%s-%s-%s-%s-%s\", var.region, var.ubuntu_distribution, var.ubuntu_architecture, var.ubuntu_virttype, var.ubuntu_storagetype))}"
+  ami = "${lookup(var.aws_ubuntu_amis, format("%s-%s-%s-%s-%s", var.region, var.ubuntu_distribution, var.ubuntu_architecture, var.ubuntu_virttype, var.ubuntu_storagetype))}"
   instance_type = "${var.jenkins_instance_type}"
   subnet_id = "${aws_subnet.admin_public_subnet.0.id}"
   vpc_security_group_ids = ["${aws_security_group.infra_jenkins.id}", "${aws_security_group.vpc_sg.id}", "${aws_security_group.mgmt_sg.id}"]
@@ -57,7 +57,7 @@ resource "aws_instance" "jenkins" {
     user = "${var.ssh_user}"
     bastion_host = "${aws_instance.bastion.public_ip}"
     bastion_user = "${var.ssh_user}"
-    key_file = "${var.ssh_private_key_location}"
+    private_key = "${file(var.ssh_private_key_location)}"
     host = "${aws_instance.jenkins.private_ip}"
     agent = false
   }
@@ -92,7 +92,7 @@ resource "aws_instance" "jenkins" {
 
 /* Spinnaker instance */
 resource "aws_instance" "spinnaker" {
-  ami = "${lookup(var.aws_spinnaker_amis, format(\"%s-%s\", var.region, var.ubuntu_virttype))}"
+  ami = "${lookup(var.aws_spinnaker_amis, format("%s-%s", var.region, var.ubuntu_virttype))}"
   instance_type = "${var.spinnaker_instance_type}"
   subnet_id = "${aws_subnet.admin_public_subnet.1.id}"
   vpc_security_group_ids = ["${aws_security_group.infra_spinnaker.id}", "${aws_security_group.vpc_sg.id}", "${aws_security_group.mgmt_sg.id}"]
@@ -104,7 +104,7 @@ resource "aws_instance" "spinnaker" {
     user = "${var.ssh_user}"
     bastion_host = "${aws_instance.bastion.public_ip}"
     bastion_user = "${var.ssh_user}"
-    key_file = "${var.ssh_private_key_location}"
+    private_key = "${file(var.ssh_private_key_location)}"
     host = "${aws_instance.spinnaker.private_ip}"
     agent = false
   }
